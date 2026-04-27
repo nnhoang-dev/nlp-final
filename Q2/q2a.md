@@ -1,47 +1,39 @@
-# Q2A: Doc2Vec với Pretrained Model
+# Q2A: Doc2Vec với Pretrained Model (Sentence Transformers)
 
-## Giới thiệu
+## 1. Mục tiêu
+Sử dụng mô hình pretrained để tạo document embeddings và đánh giá hiệu quả phân loại văn bản trên 20 Newsgroups.
 
-Notebook này sử dụng **Sentence Transformers** (pretrained model) để tạo document embeddings và so sánh với Gensim Doc2Vec truyền thống.
+## 2. Phương pháp
 
-## Phương pháp
+### 2.1 Mô hình sử dụng
+- **Sentence Transformers**: `all-MiniLM-L6-v2`
+- Embedding: **384 chiều**
+- Đặc trưng: đã pretrain trên dữ liệu lớn, học tốt quan hệ ngữ nghĩa.
 
-### Sentence Transformers
-- **Model**: all-MiniLM-L6-v2
-- **Embedding**: 384 chiều
-- **Parameters**: ~22 triệu
-- **Đặc điểm**: Pre-trained trên 1 triệu+ cặp câu từ SNLI, MultiNLI, Wikipedia
+### 2.2 Quy trình thực nghiệm
+1. Load dữ liệu 20 Newsgroups (4 categories).
+2. Làm sạch dữ liệu cơ bản và cắt độ dài văn bản.
+3. Encode văn bản train/test thành vectors.
+4. Huấn luyện Logistic Regression trên vectors train.
+5. Đánh giá accuracy trên tập test.
 
-### Gensim Doc2Vec (để so sánh)
-- PV-DM (Distributed Memory): 100D
-- PV-DBOW (Distributed Bag of Words): 100D
-
-## Dataset
-
-- **20 Newsgroups** với 4 categories:
-  - sci.med (Y học)
-  - sci.space (Khoa học vũ trụ)
-  - rec.sport.baseball (Bóng chày)
-  - talk.politics.misc (Chính trị)
-- Train: 2249 samples, Test: 1497 samples
-- Preprocessing: Truncate 3000 chars
-
-## Kết quả
+## 3. Kết quả thực nghiệm
 
 | Model | Accuracy |
 |-------|----------|
-| **Sentence Transformers** | **87.71%** |
-| Gensim PV-DBOW | 75.22% |
-| Gensim PV-DM | 66.33% |
+| **Sentence Transformers (all-MiniLM-L6-v2)** | **87.71%** |
 
-## Ưu điểm
+## 4. Phân tích
 
-- **Không cần train**: Dùng pretrained weights
-- **Chất lượng cao**: Hiểu ngữ nghĩa sâu
-- **Nhanh**: Sử dụng được ngay
+### Ưu điểm
+- Không cần train embedding từ đầu.
+- Hiệu năng cao ngay cả với dữ liệu không lớn.
+- Triển khai nhanh, dễ tái sử dụng.
 
-## Hạn chế
+### Hạn chế
+- Phụ thuộc vào pretrained corpus (domain mismatch có thể xảy ra).
+- Chi phí tính toán cao hơn một số mô hình truyền thống.
+- Khó can thiệp sâu vào cơ chế biểu diễn nội bộ.
 
-- Chủ yếu Tiếng Anh
-- Model lớn (22M params)
-- Khó tùy biến cho domain đặc biệt
+## 5. Kết luận
+Cách tiếp cận pretrained là lựa chọn tốt nhất trong bài này, đạt accuracy cao và thời gian triển khai ngắn.
